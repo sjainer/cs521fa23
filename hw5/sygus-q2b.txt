@@ -1,0 +1,58 @@
+(define-fun g ((l Int) (u Int)) Int (* (* u u) u))
+(define-fun h ((l Int) (u Int)) Int (* (* l l) l))
+
+
+(set-logic NIA)
+
+(synth-fun g ((l Int) (u Int)) Int
+
+  ((Start Int) (StartBool Bool))
+
+  ((Start Int (0 l u
+
+               (- Start)
+               
+               (* Start Start)
+               
+               (ite StartBool Start Start)))
+
+   (StartBool Bool ((and StartBool StartBool)
+
+                    (not StartBool)
+                    
+                    (= Start Start)
+
+                    (<= Start Start)))))
+
+(synth-fun h ((l Int) (u Int)) Int
+
+  ((Start Int) (StartBool Bool))
+
+  ((Start Int (0 l u
+
+               (- Start)
+               
+               (* Start Start)
+               
+               (ite StartBool Start Start)))
+
+   (StartBool Bool ((and StartBool StartBool)
+
+                    (not StartBool)
+                    
+                    (= Start Start)
+
+                    (<= Start Start)))))
+
+(declare-var l Int)
+
+(declare-var u Int)
+
+(declare-var x Int)
+
+(constraint (ite (and (>= x l) (>= u x)) (>= (g l u) (* x (* x x))) true))
+
+(constraint (ite (and (>= x l) (>= u x)) (<= (h l u) (* x (* x x))) true))
+
+
+(check-synth)

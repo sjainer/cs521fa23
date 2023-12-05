@@ -1,0 +1,488 @@
+
+(set-logic NIA)
+
+(synth-fun g ((l Int) (u Int)) Int
+
+  ((Start Int) (StartBool Bool))
+
+  ((Start Int (0 1 l u
+
+               (- Start)
+               
+               (* Start Start)
+               
+               (ite StartBool Start Start)))
+
+   (StartBool Bool ((and StartBool StartBool)
+
+                    (not StartBool)
+                    
+                    (= Start Start)
+
+                    (<= Start Start)))))
+
+(synth-fun h ((l Int) (u Int)) Int
+
+  ((Start Int) (StartBool Bool))
+
+  ((Start Int (0 1 l u
+
+               (- Start)
+               
+               (* Start Start)
+               
+               (ite StartBool Start Start)))
+
+   (StartBool Bool ((and StartBool StartBool)
+
+                    (not StartBool)
+                    
+                    (= Start Start)
+
+                    (<= Start Start)))))
+
+(declare-var l Int)
+
+(declare-var u Int)
+
+(declare-var x Int)
+
+(constraint (ite (and (>= x l) (>= u x)) (>= (g l u) (ite (>= (* x x) (* x (* x x)) ) (* x x) (* x (* x x)))) true))
+
+(constraint (ite (and (>= x l) (>= u x)) (<= (h l u) (ite (>= (* x x) (* x (* x x))) (* x x) (* x (* x x)))) true))
+
+(check-synth)
+
+Result: CVC4 interrupted by timeout.
+
+Try 2: Reduced the size of the grammar.
+
+
+(set-logic NIA)
+
+(synth-fun g ((l Int) (u Int)) Int
+
+  ((Start Int) (StartBool Bool))
+
+  ((Start Int (0 1 l u
+               
+               (* Start Start)
+               
+               (ite StartBool Start Start)))
+
+   (StartBool Bool ((<= Start Start)))))
+
+(synth-fun h  ((l Int) (u Int)) Int
+
+    ((Start Int) (StartBool Bool))
+
+    ((Start Int (0 1 l u
+               
+               (* Start Start)
+               
+               (ite StartBool Start Start)))
+
+   (StartBool Bool ((<= Start Start)))))
+
+(declare-var l Int)
+
+(declare-var u Int)
+
+(declare-var x Int)
+
+(constraint (ite (and (>= x l) (>= u x)) (>= (g l u) (ite (>= (* x x) (* x (* x x)) ) (* x x) (* x (* x x)))) true))
+
+(constraint (ite (and (>= x l) (>= u x)) (<= (h l u) (ite (>= (* x x) (* x (* x x))) (* x x) (* x (* x x)))) true))
+
+(check-synth)
+
+Result: CVC4 interrupted by timeout.
+
+Try 3: Replace multiplication with squaring and cubing only.
+
+
+(set-logic NIA)
+
+(synth-fun g ((l Int) (u Int)) Int
+
+  ((Start Int) (StartBool Bool))
+
+  ((Start Int (0 1 l u
+               
+               (^ Start 2)
+               
+               (^ Start 3)
+               
+               (ite StartBool Start Start)))
+
+   (StartBool Bool ((<= Start Start)))))
+
+(synth-fun h  ((l Int) (u Int)) Int
+
+    ((Start Int) (StartBool Bool))
+
+    ((Start Int (0 1 l u
+               
+               (^ Start 2)
+               
+               (^ Start 3)
+               
+               (ite StartBool Start Start)))
+
+   (StartBool Bool ((<= Start Start)))))
+
+(declare-var l Int)
+
+(declare-var u Int)
+
+(declare-var x Int)
+
+(constraint (ite (and (>= x l) (>= u x)) (>= (g l u) (ite (>= (^ x 2) (^ x 3)) (^ x 2) (^ x 3))) true))
+
+(constraint (ite (and (>= x l) (>= u x)) (<= (h l u) (ite (>= (^ x 2) (^ x 3)) (^ x 2) (^ x 3))) true))
+
+(check-synth)
+
+Result: CVC4 interrupted by timeout.
+
+Try 4: Only allow l or u to be cubed or squared.
+
+
+(set-logic NIA)
+
+(synth-fun g ((l Int) (u Int)) Int
+
+  ((Start Int) (StartVar Int) (StartBool Bool))
+
+  ((Start Int (0 1 StartVar
+               
+               (^ StartVar 2)
+               
+               (^ StartVar 3)
+               
+               (ite StartBool Start Start)))
+
+    (StartVar Int (l u))
+    
+   (StartBool Bool ((<= Start Start)))))
+
+(synth-fun h  ((l Int) (u Int)) Int
+
+    ((Start Int) (StartVar Int) (StartBool Bool))
+
+  ((Start Int (0 1 StartVar
+               
+               (^ StartVar 2)
+               
+               (^ StartVar 3)
+               
+               (ite StartBool Start Start)))
+
+    (StartVar Int (l u))
+    
+   (StartBool Bool ((<= Start Start)))))
+
+(declare-var l Int)
+
+(declare-var u Int)
+
+(declare-var x Int)
+
+(constraint (ite (and (>= x l) (>= u x)) (>= (g l u) (ite (>= (^ x 2) (^ x 3)) (^ x 2) (^ x 3))) true))
+
+(constraint (ite (and (>= x l) (>= u x)) (<= (h l u) (ite (>= (^ x 2) (^ x 3)) (^ x 2) (^ x 3))) true))
+
+(check-synth)
+
+Result: CVC4 interrupted by SIGTERM. Not sure how this is different.
+
+Try 5: Same as try 4 but manually.
+
+
+(set-logic NIA)
+
+(synth-fun g ((l Int) (u Int)) Int
+
+  ((Start Int) (StartBool Bool))
+
+  ((Start Int (0 1 l u
+               
+               (^ l 2)
+               
+               (^ l 3)
+               
+               (^ u 2)
+               
+               (^ u 3)
+               
+               (ite StartBool Start Start)))
+    
+   (StartBool Bool ((<= Start Start)))))
+
+(synth-fun h  ((l Int) (u Int)) Int
+
+    ((Start Int) (StartBool Bool))
+
+  ((Start Int (0 1 l u
+               
+               (^ l 2)
+               
+               (^ l 3)
+               
+               (^ u 2)
+               
+               (^ u 3)
+               
+               (ite StartBool Start Start)))
+    
+   (StartBool Bool ((<= Start Start)))))
+
+(declare-var l Int)
+
+(declare-var u Int)
+
+(declare-var x Int)
+
+(constraint (ite (and (>= x l) (>= u x)) (>= (g l u) (ite (>= (^ x 2) (^ x 3)) (^ x 2) (^ x 3))) true))
+
+(constraint (ite (and (>= x l) (>= u x)) (<= (h l u) (ite (>= (^ x 2) (^ x 3)) (^ x 2) (^ x 3))) true))
+
+(check-synth)
+
+Result: (define-fun g ((l Int) (u Int)) Int (let ((_let_1 (^ u 3))) (let ((_let_2 (^ l 2))) (ite (<= _let_1 _let_2) _let_2 _let_1))))
+(define-fun h ((l Int) (u Int)) Int (^ l 3))
+
+Try 6: this is because of the use of integer arithmetic. I attempt again, with real arithmetic.
+
+
+(set-logic NRA)
+
+(synth-fun g ((l Real) (u Real)) Real
+
+  ((Start Real) (StartBool Bool))
+
+  ((Start Real (0.0 1.0 l u
+               
+               (^ l 2)
+               
+               (^ l 3)
+               
+               (^ u 2)
+               
+               (^ u 3)
+               
+               (ite StartBool Start Start)))
+    
+   (StartBool Bool ((<= Start Start)))))
+
+(synth-fun h  ((l Real) (u Real)) Real
+
+    ((Start Real) (StartBool Bool))
+
+  ((Start Real (0.0 1.0 l u
+               
+               (^ l 2)
+               
+               (^ l 3)
+               
+               (^ u 2)
+               
+               (^ u 3)
+               
+               (ite StartBool Start Start)))
+    
+   (StartBool Bool ((<= Start Start)))))
+
+(declare-var l Real)
+
+(declare-var u Real)
+
+(declare-var x Real)
+
+(constraint (ite (and (>= x l) (>= u x)) (>= (g l u) (ite (>= (^ x 2) (^ x 3)) (^ x 2) (^ x 3))) true))
+
+(constraint (ite (and (>= x l) (>= u x)) (<= (h l u) (ite (>= (^ x 2) (^ x 3)) (^ x 2) (^ x 3))) true))
+
+(check-synth)
+
+Result: CVC4 interrupted by SIGTERM.
+
+Try 7: Generate one function at a time.
+
+
+(set-logic NRA)
+
+(synth-fun g ((l Real) (u Real)) Real
+
+  ((Start Real) (StartBool Bool))
+
+  ((Start Real (0.0 1.0 l u
+               
+               (^ l 2)
+               
+               (^ l 3)
+               
+               (^ u 2)
+               
+               (^ u 3)
+               
+               (ite StartBool Start Start)))
+    
+   (StartBool Bool ((<= Start Start)))))
+   
+(declare-var l Real)
+
+(declare-var u Real)
+
+(declare-var x Real)
+
+(constraint (ite (and (>= x l) (>= u x)) (>= (g l u) (ite (>= (^ x 2) (^ x 3)) (^ x 2) (^ x 3))) true))
+
+(check-synth)
+
+Result: CVC4 interrupted by SIGTERM.
+
+Try 8: Lower grammar even further, increase time limit significantly, start with lower bound.
+
+
+(set-logic NRA)
+
+(synth-fun h ((l Real) (u Real)) Real
+
+  ((Start Real) (StartBool Bool))
+
+  ((Start Real (0.0 l u
+
+               (- Start)
+               
+               (^ l 2)
+               
+               (^ l 3)
+               
+               (^ u 2)
+               
+               (^ u 3)
+               
+               (ite StartBool Start Start)))
+
+   (StartBool Bool ((and StartBool StartBool)
+
+                    (not StartBool)
+                    
+                    (= Start Start)
+
+                    (<= Start Start)))))
+
+(declare-var l Real)
+
+(declare-var u Real)
+
+(declare-var x Real)
+
+(constraint (ite (and (>= x l) (>= u x)) (<= (h l u) (ite (>= (^ x 2) (^ x 3)) (^ x 2) (^ x 3))) true))
+
+
+(check-synth)
+
+Result: (define-fun h ((l Real) (u Real)) Real 0.0)
+
+Now only g is left.
+
+Try 9:
+
+
+(set-logic NRA)
+
+(synth-fun g ((l Real) (u Real)) Real
+
+  ((Start Real) (StartBool Bool))
+
+  ((Start Real (0.0 1.0 l u
+               
+               (^ l 2)
+               
+               (^ u 2)
+               
+               (^ u 3)
+               
+               (ite StartBool Start Start)))
+
+   (StartBool Bool ((<= Start Start)))))
+
+(declare-var l Real)
+
+(declare-var u Real)
+
+(declare-var x Real)
+
+(constraint (ite (and (>= x l) (>= u x)) (>= (g l u) (ite (>= (^ x 2) (^ x 3)) (^ x 2) (^ x 3))) true))
+
+
+(check-synth)
+
+Result: CVC4 interrupted by SIGTERM.
+
+Try 10: Forcefeeding it only known useful terms.
+
+
+(set-logic NRA)
+
+(synth-fun g ((l Real) (u Real)) Real
+
+  ((Start Real) (StartBool Bool))
+
+  ((Start Real ((^ l 2)
+               
+               (^ u 2)
+               
+               (^ u 3)
+               (ite StartBool Start Start)))
+
+   (StartBool Bool ((<= Start Start)))))
+
+(declare-var l Real)
+
+(declare-var u Real)
+
+(declare-var x Real)
+
+(constraint (ite (and (>= x l) (>= u x)) (>= (g l u) (ite (>= (^ x 2) (^ x 3)) (^ x 2) (^ x 3))) true))
+
+
+(check-synth)
+
+Result: CVC4 interrupted by SIGTERM.
+
+Try 11: Back to integers.
+
+
+(set-logic NIA)
+
+(synth-fun g ((l Int) (u Int)) Int
+
+  ((Start Int) (StartBool Bool))
+
+  ((Start Int ((^ l 2)
+               
+               (^ u 2)
+               
+               (^ u 3)
+               (ite StartBool Start Start)))
+
+   (StartBool Bool ((<= Start Start)))))
+
+(declare-var l Int)
+
+(declare-var u Int)
+
+(declare-var x Int)
+
+(constraint (ite (and (>= x l) (>= u x)) (>= (g l u) (ite (>= (^ x 2) (^ x 3)) (^ x 2) (^ x 3))) true))
+
+
+(check-synth)
+
+Result: (define-fun g ((l Int) (u Int)) Int (let ((_let_1 (^ l 2))) (let ((_let_2 (^ u 3))) (ite (<= _let_1 _let_2) _let_2 _let_1))))
+
+I don't understand what this means.
+
